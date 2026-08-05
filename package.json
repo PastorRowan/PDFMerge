@@ -1,0 +1,23 @@
+{
+    "name": "pdfmerge",
+    "version": "1.0.0",
+    "description": "pdf merge node script",
+    "main": "main.js",
+    "scripts": {
+        "execute": "node main.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/PastorRowan/PDFMerge.git"
+    },
+    "author": "Rowan Van Zyl",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/PastorRowan/PDFMerge/issues"
+    },
+    "homepage": "https://github.com/PastorRowan/PDFMerge#readme",
+    "dependencies": {
+        "pdf-lib": "^1.17.1"
+    }
+}
