@@ -20,31 +20,38 @@ async function main() {
     // Array of unsorted pdf files to combine
     const pdfFilesUnsorted = fs.readdirSync(pdfsDir);
 
-    const numberOfPages = pdfFilesUnsorted.length;
+    const numberOfPdfFiles = pdfFilesUnsorted.length;
 
-    // Returns early if pdf directory is empty (no pdfs to merge)
-    if (numberOfPages <= 0) {
-        console.log("Error: pdf files directory is empty, no pdfs to merge");
+    console.log("Number of pdf files to merge: ", numberOfPdfFiles);
+
+    // Returns early if no pdf files were found
+    if (numberOfPdfFiles <= 0) {
+        console.log(`Error: no pdf files found in directory ${pdfsDir}`);
         return;
     };
 
     // Array of sorted pdf files to combine
-    const pdfFilesSorted = [];
+    const pdfFilePathsSorted = [];
 
     console.log("\nCollecting pdf files:\n");
 
     // Fills sorted pdf files array with the files in the unsorted array
-    for (let i = 1; i <= numberOfPages; i++) {
+    for (let i = 1; i <= numberOfPdfFiles; i++) {
 
-        const pdfFile = pdfFilesUnsorted.find(
+        const currentPdfFileSubstring = `(page ${i} of ${numberOfPdfFiles})`;
+
+        const currentPdfFileName = pdfFilesUnsorted.find(
             (fName) => {
-                return fName.includes(`(page ${i} of ${numberOfPages})`);
+                return fName.includes(currentPdfFileSubstring);
             }
         );
 
-        if (pdfFile) {
-            console.log(" ", pdfFile);
-            pdfFilesSorted.push(pdfFile);
+        if (currentPdfFileName) {
+            console.log(" ", currentPdfFileName);
+            const currentPdfFilePath = path.join(pdfsDir, currentPdfFileName);
+            pdfFilePathsSorted.push(currentPdfFilePath);
+        } else {
+            console.log(" ", `Failed to find pdf file: ${currentPdfFileName}`);
         };
 
     };
@@ -57,7 +64,7 @@ async function main() {
     const mergedPdf = await PDFDocument.create();
 
     // Create merged all pdfs into merged pdf
-    for (const pdfPath of pdfFilesSorted) {
+    for (const pdfPath of pdfFilePathsSorted) {
         const pdfBytes = fs.readFileSync(pdfPath);
         const pdf = await PDFDocument.load(pdfBytes);
         const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
@@ -79,7 +86,7 @@ async function main() {
 
 main()
     .then(() => {
-        console.log("\nApplication finished.");
+        console.log("\nScript finished.");
     })
     .catch((error) => {
         console.error("Error:", error);
