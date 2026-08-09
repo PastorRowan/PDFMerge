@@ -11,11 +11,15 @@ async function main() {
 
     // Makes sure pdfs directory exists
     if (!fs.existsSync(pdfsDir)) {
-        console.log("\n Creating pdf files directory:\n");
-        fs.mkdirSync(pdfsDir, { recursive: true });
+        console.log(`\n Creating pdf files directory ${pdfsDir}\n`);
+        try {
+            fs.mkdirSync(pdfsDir, { recursive: true });
+        } catch (error) {
+            throw new Error(`Error: Failed to create pdf files directory ${pdfsDir}\n${error}`);
+        };
     };
 
-    console.log("\nCollecting pdf files:\n");
+    console.log(`\nCollecting unsorted pdf files from ${pdfsDir}\n`);
 
     // Array of unsorted pdf files to combine
     const pdfFilesUnsorted = fs.readdirSync(pdfsDir);
@@ -33,7 +37,7 @@ async function main() {
     // Array of sorted pdf files to combine
     const pdfFilePathsSorted = [];
 
-    console.log("\nCollecting pdf files:\n");
+    console.log("\nSorting pdf files:");
 
     // Fills sorted pdf files array with the files in the unsorted array
     for (let i = 1; i <= numberOfPdfFiles; i++) {
